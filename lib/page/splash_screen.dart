@@ -9,7 +9,8 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
 
@@ -23,7 +24,8 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       duration: Duration(seconds: 2),
     );
 
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 2.0).animate(_animationController);
+    _fadeAnimation =
+        Tween<double>(begin: 0.0, end: 2.0).animate(_animationController);
 
     _animationController.forward();
 
@@ -38,9 +40,11 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     Navigator.pushReplacement(
       context,
       PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => const RestaurantListPage(),
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            RestaurantListPage(),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          var fadeAnimation = Tween<double>(begin: 0.0, end: 2.0).animate(animation);
+          var fadeAnimation =
+              Tween<double>(begin: 0.0, end: 2.0).animate(animation);
 
           return FadeTransition(
             opacity: fadeAnimation,
@@ -53,7 +57,8 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
   @override
   void dispose() {
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: SystemUiOverlay.values);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: SystemUiOverlay.values);
     _animationController.dispose();
     super.dispose();
   }
@@ -93,6 +98,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                   color: Colors.white,
                   fontSize: 32,
                 ),
+                
               ),
             ),
           ],

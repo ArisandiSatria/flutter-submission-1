@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:restaurant_app/model/restaurant.dart';
+import 'package:restaurant_app/page/restaurant_detail_screen.dart';
 import 'package:restaurant_app/page/restaurant_list_screen.dart';
 import 'package:restaurant_app/page/splash_screen.dart';
 
@@ -18,9 +20,11 @@ class MyApp extends StatelessWidget {
           textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme)),
       initialRoute: "/",
       routes: {
-        '/': (context) => const SplashScreen(),
-        '/restaurant-list': (context) => const RestaurantListPage(),
-        // '/restaurant-detail': (context) => const RestaurantDetailPage()
+        '/': (context) => SplashScreen(),
+        '/restaurant-list': (context) => RestaurantListPage(),
+        '/restaurant-detail': (context) => RestaurantDetailPage(
+           restaurant: ModalRoute.of(context)?.settings.arguments as Restaurant,
+        )
       },
       debugShowCheckedModeBanner: false,
     );

@@ -35,6 +35,10 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
                 .loadString('assets/local_restaurant.json'),
             builder: (context, snapshot) {
               restaurant = parseRestaurant(snapshot.data);
+              final filteredRestaurants = restaurant!
+                  .where((r) =>
+                      r.name.toLowerCase().contains(_searchQuery.toLowerCase()))
+                  .toList();
               return SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -66,19 +70,30 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
                     ListView.builder(
                       shrinkWrap: true,
                       physics: ClampingScrollPhysics(),
-                      itemCount: restaurant!
-                          .where((r) => r.name
-                              .toLowerCase()
-                              .contains(_searchQuery.toLowerCase()))
-                          .length,
+                      itemCount: filteredRestaurants.length == 0
+                          ? 1
+                          : filteredRestaurants.length,
                       itemBuilder: (context, index) {
-                        final filteredRestaurants = restaurant!
-                            .where((r) => r.name
-                                .toLowerCase()
-                                .contains(_searchQuery.toLowerCase()))
-                            .toList();
-                        return _buildRestaurantItem(
-                            context, filteredRestaurants[index]);
+                        if (filteredRestaurants.length == 0) {
+                          return Center(
+                            child: Padding(
+                                padding: EdgeInsets.symmetric(vertical: 50),
+                                child: Column(
+                                  children: [
+                                    Image.asset(
+                                      'assets/images/loupe.png',
+                                      fit: BoxFit.cover,
+                                      scale: 12,
+                                      color: Colors.grey,
+                                    ),
+                                    Text("Not Found")
+                                  ],
+                                )),
+                          );
+                        } else {
+                          return _buildRestaurantItem(
+                              context, filteredRestaurants[index]);
+                        }
                       },
                     )
                   ],
@@ -122,6 +137,7 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
             borderSide: BorderSide.none,
           ),
         ),
+        // controller: _searchQueryController,
         onChanged: (value) {
           setState(() {
             _searchQuery = value;

@@ -118,7 +118,7 @@ class RestaurantDetailPage extends StatelessWidget {
               return SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
-                  children: restaurant.menus.foods.map((food) {
+                  children: restaurant.menus!.foods.map((food) {
                     return Padding(
                         padding: EdgeInsets.symmetric(horizontal: 8),
                         child: Container(
@@ -161,7 +161,7 @@ class RestaurantDetailPage extends StatelessWidget {
               return SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
-                  children: restaurant.menus.drinks.map((drink) {
+                  children: restaurant.menus!.drinks.map((drink) {
                     return Padding(
                         padding: EdgeInsets.symmetric(horizontal: 8),
                         child: Container(

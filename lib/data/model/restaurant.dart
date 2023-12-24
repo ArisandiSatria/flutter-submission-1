@@ -1,46 +1,87 @@
 import 'dart:convert';
 
-// import 'package:flutter/material.dart';
-
 class Welcome {
-  final List<Restaurant> restaurants;
+  final bool error;
+  final String message;
+  final Restaurant restaurant;
 
   Welcome({
-    required this.restaurants,
+    required this.error,
+    required this.message,
+    required this.restaurant,
   });
 
-  factory Welcome.fromJson(Map<String, dynamic> welcome) => Welcome(
-        restaurants: welcome['restaurants'],
-      );
+  factory Welcome.fromJson(Map<String, dynamic> json) => Welcome(
+        error: json["error"],
+        message: json["message"],
+        restaurant: Restaurant.fromJson(json["restaurant"]),
+    );
 }
 
 class Restaurant {
   final String id;
   final String name;
   final String description;
-  final String pictureId;
   final String city;
-  final double rating;
+  final String address;
+  final String pictureId;
+  final Category categories;
   final Menus menus;
+  final double rating;
+  final CustomerReview customerReviews;
 
   Restaurant({
     required this.id,
     required this.name,
     required this.description,
-    required this.pictureId,
     required this.city,
-    required this.rating,
+    required this.address,
+    required this.pictureId,
+    required this.categories,
     required this.menus,
+    required this.rating,
+    required this.customerReviews,
   });
 
   factory Restaurant.fromJson(Map<String, dynamic> restaurant) => Restaurant(
       id: restaurant['id'],
       name: restaurant['name'],
       description: restaurant['description'],
-      pictureId: restaurant['pictureId'],
       city: restaurant['city'],
+      address: restaurant['address'],
+      pictureId: restaurant['pictureId'],
+      categories: Category.fromJson(restaurant['categories']),
+      menus: Menus.fromJson(restaurant['menus']),
       rating: restaurant['rating'].toDouble(),
-      menus: Menus.fromJson(restaurant['menus']));
+      customerReviews: CustomerReview.fromJson(restaurant['review']));
+}
+
+class Category {
+  final String name;
+
+  Category({
+    required this.name,
+  });
+
+  factory Category.fromJson(Map<String, dynamic> category) => Category(
+        name: category["name"],
+      );
+}
+
+class CustomerReview {
+  final String name;
+  final String review;
+  final String date;
+
+  CustomerReview({
+    required this.name,
+    required this.review,
+    required this.date,
+  });
+
+  factory CustomerReview.fromJson(Map<String, dynamic> review) =>
+      CustomerReview(
+          name: review['name'], review: review['review'], date: review['date']);
 }
 
 class Menus {

@@ -21,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen>
 
     _animationController = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 2),
+      duration: const Duration(seconds: 2),
     );
 
     _fadeAnimation =
@@ -41,7 +41,7 @@ class _SplashScreenState extends State<SplashScreen>
       context,
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) =>
-            RestaurantListPage(),
+            const RestaurantListPage(),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           var fadeAnimation =
               Tween<double>(begin: 0.0, end: 2.0).animate(animation);
@@ -80,18 +80,18 @@ class _SplashScreenState extends State<SplashScreen>
           children: [
             FadeTransition(
               opacity: _fadeAnimation,
-              child: Icon(
+              child: const Icon(
                 Icons.restaurant,
                 size: 80,
                 color: Colors.white,
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             FadeTransition(
               opacity: _fadeAnimation,
-              child: Text(
+              child: const Text(
                 "Restinfo",
                 style: TextStyle(
                   fontStyle: FontStyle.italic,

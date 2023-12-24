@@ -3,8 +3,8 @@ import 'dart:convert';
 class Welcome {
   final bool error;
   final String message;
-  final Restaurant? restaurant;
-  final List<Restaurant> restaurants;
+  final Restaurant? restaurant; // kalo mau ambil data detail pake ini
+  final List<Restaurant> restaurants; // kalo mau ambil data list pake ini
 
   Welcome({
     required this.error,

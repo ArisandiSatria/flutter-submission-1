@@ -1,21 +1,25 @@
 import 'dart:convert';
 
 class Welcome {
-  final bool error;
-  final String message;
-  final Restaurant restaurant;
+    final bool error;
+    final String message;
+    final int count;
+    final List<Restaurant> restaurants;
 
-  Welcome({
-    required this.error,
-    required this.message,
-    required this.restaurant,
-  });
+    Welcome({
+        required this.error,
+        required this.message,
+        required this.count,
+        required this.restaurants,
+    });
 
-  factory Welcome.fromJson(Map<String, dynamic> json) => Welcome(
+    factory Welcome.fromJson(Map<String, dynamic> json) => Welcome(
         error: json["error"],
         message: json["message"],
-        restaurant: Restaurant.fromJson(json["restaurant"]),
+        count: json["count"],
+        restaurants: List<Restaurant>.from(json["restaurants"].map((x) => Restaurant.fromJson(x))),
     );
+
 }
 
 class Restaurant {

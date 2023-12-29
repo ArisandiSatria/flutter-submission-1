@@ -41,7 +41,7 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
             if (state.state == ResultState.loading) {
               return const Center(child: CircularProgressIndicator());
             } else if (state.state == ResultState.hasData) {
-              debugPrint(state.result.toString());
+              debugPrint(state.result.message.toString());
               return Text("OK");
               // return ListView.builder(
               //   shrinkWrap: true,

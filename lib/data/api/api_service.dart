@@ -11,7 +11,7 @@ class Api {
     final response = await http.get(Uri.parse("$_url/list"));
 
     if (response.statusCode == 200) {
-      // debugPrint(response.body);
+      debugPrint(response.body);
         return Welcome.fromJson(json.decode(response.body));
       } else {
         throw Exception('Failed to load restaurant list');

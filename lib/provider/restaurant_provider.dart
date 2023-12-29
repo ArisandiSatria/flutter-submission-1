@@ -10,34 +10,32 @@ class RestaurantProvider extends ChangeNotifier {
   RestaurantProvider({required this.api}) {
     _fetchAllRestaurant();
   }
-
-  late Welcome _restaurant;
-  late ResultState _state = ResultState.loading; // Provide an initial value here
+ 
+  late List<Restaurant> _restaurant;
+  late ResultState _state;
   String _message = '';
 
   String get message => _message;
 
-  Welcome get result => _restaurant;
-
+  List<Restaurant> get result => _restaurant;
+ 
   ResultState get state => _state;
-
+ 
   Future<void> _fetchAllRestaurant() async {
-      final response = await api.fetchRestaurantList();
-      debugPrint(response.toString());
     try {
-      
       _state = ResultState.loading;
       notifyListeners();
-
-      if (response.restaurant == null) {
+      final response = await api.fetchRestaurantList();
+      debugPrint(response.toString());
+      if (response.restaurants.isEmpty) {
         _state = ResultState.noData;
-        notifyListeners();
-        _message = 'Empty Data';
+         _message = 'Empty Data';
       } else {
         _state = ResultState.hasData;
-        notifyListeners();
-        _restaurant = response;
+
+        _restaurant = response.restaurants;
       }
+      notifyListeners();
     } catch (e) {
       _state = ResultState.error;
       notifyListeners();

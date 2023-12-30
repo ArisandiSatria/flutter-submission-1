@@ -13,9 +13,12 @@ class Welcome {
     required this.restaurants,
   });
 
-    factory Welcome.fromJson(Map<String, dynamic> json) => Welcome(
+  factory Welcome.fromJson(Map<String, dynamic> json) => Welcome(
         error: json["error"],
         message: json["message"],
+        restaurant: json['restaurant'] == null
+            ? null
+            : Restaurant.fromJson(json['restaurant']),
         restaurants: json['restaurants'] == null
             ? []
             : List<Restaurant>.from(
@@ -23,9 +26,6 @@ class Welcome {
                   (x) => Restaurant.fromJson(x),
                 ),
               ),
-        restaurant: json['restaurant'] == null
-            ? null
-            : Restaurant.fromJson(json['restaurant']),
       );
 }
 
@@ -34,7 +34,6 @@ class Restaurant {
   final String name;
   final String description;
   final String city;
-
   final String? address;
   final String pictureId;
   final List<Category> categories;
@@ -61,7 +60,8 @@ class Restaurant {
         description: restaurant['description'],
         city: restaurant['city'],
         address: restaurant["address"] == null ? null : restaurant['address'],
-        pictureId: restaurant['pictureId'],
+        pictureId:
+            "https://restaurant-api.dicoding.dev/images/medium/${restaurant['pictureId']}",
         categories: restaurant["categories"] == null
             ? []
             : List<Category>.from(
@@ -124,33 +124,7 @@ class Menus {
             : List<Category>.from(
                 json["drinks"]!.map((x) => Category.fromJson(x))),
       );
-
-// factory Menus.fromJson(Map<String, dynamic> json) {
-//   final foods = json["foods"] == null
-//       ? []
-//       : List<Category>.from(
-//       json["foods"]!.map((x) => Category.fromJson(x)));
-//
-//   final drinks = json["drinks"] == null
-//       ? []
-//       : List<Category>.from(
-//       json["drinks"]!.map((x) => Category.fromJson(x)));
-//
-//   return Menus(foods: foods, drinks: drinks);
-// }
 }
-
-// class Drink {
-//   final String name;
-//
-//   Drink({
-//     required this.name,
-//   });
-//
-//   factory Drink.fromJson(Map<String, dynamic> json) {
-//     return Drink(name: json['name']);
-//   }
-// }
 
 List<Restaurant> parseRestaurant(String? json) {
   if (json == null) {

@@ -11,19 +11,18 @@ class Api {
     final response = await http.get(Uri.parse("$_url/list"));
 
     if (response.statusCode == 200) {
-      debugPrint(response.body);
         return Welcome.fromJson(json.decode(response.body));
       } else {
         throw Exception('Failed to load restaurant list');
       }
   }
 
-  Future<Restaurant> fetchRestaurantDetail(String id) async {
+  Future<Welcome> fetchRestaurantDetail(String id) async {
     final response = await http.get(Uri.parse("$_url/detail/$id"));
 
     if (response.statusCode == 200) {
       debugPrint(response.body);
-        return Restaurant.fromJson(json.decode(response.body));
+        return Welcome.fromJson(json.decode(response.body));
       } else {
         throw Exception('Failed to load restaurant detail');
       }

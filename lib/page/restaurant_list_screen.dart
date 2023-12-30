@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_app/data/model/restaurant.dart';
-import 'package:restaurant_app/data/model/restaurant_category.dart';
 import 'package:restaurant_app/provider/restaurant_provider.dart';
+import 'package:flutter/gestures.dart';
 
 class RestaurantListPage extends StatefulWidget {
   const RestaurantListPage({Key? key}) : super(key: key);
@@ -12,83 +12,95 @@ class RestaurantListPage extends StatefulWidget {
 }
 
 class _RestaurantListPageState extends State<RestaurantListPage> {
-  List<Restaurant>? restaurant;
-
   String _searchQuery = '';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("Restfo",
-                  style: TextStyle(
-                      color: Colors.deepPurple, fontWeight: FontWeight.w600)),
-              Text(
-                "Temukan restoran pilihan anda dengan mudah!",
-                style: TextStyle(fontSize: 11, color: Colors.grey),
-              )
-            ],
-          ),
+      appBar: AppBar(
+        title: const Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Restfo",
+                style: TextStyle(
+                    color: Colors.deepPurple, fontWeight: FontWeight.w600)),
+            Text(
+              "Temukan restoran pilihan anda dengan mudah!",
+              style: TextStyle(fontSize: 11, color: Colors.grey),
+            )
+          ],
         ),
-        body: Consumer<RestaurantProvider>(
-          builder: (context, state, _) {
-            // final filteredRestaurants = restaurant!
-            //     .where((r) =>
-            //         r.name.toLowerCase().contains(_searchQuery.toLowerCase()))
-            //     .toList();
-            if (state.state == ResultState.loading) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (state.state == ResultState.hasData) {
-              debugPrint(state.result.toString());
-              return const Text("OK");
-              // return ListView.builder(
-              //   shrinkWrap: true,
-              //   itemCount: state.result.restaurants.length,
-              //   itemBuilder: (context, index) {
-              //     var restaurant = state.result.restaurants[index];
-              //     return SingleChildScrollView(
-              //       child: Column(
-              //         crossAxisAlignment: CrossAxisAlignment.start,
-              //         children: [
-              //           _banner(),
-              //           ListView.builder(
-              //             shrinkWrap: true,
-              //             physics: const ClampingScrollPhysics(),
-              //             itemCount: state.result.retaurants.length,
-              //             itemBuilder: (context, index) {
-              //               return _buildRestaurantItem(
-              //               context, retaurants[index]);
-              //             },
-              //           )
-              //         ],
-              //       ),
-              //     );
-              //   },
-              // );
-            } else if (state.state == ResultState.noData) {
-              return Center(
-                child: Material(
-                  child: Text(state.message),
-                ),
-              );
-            } else if (state.state == ResultState.error) {
-              return Center(
-                child: Material(
-                  child: Text(state.message),
-                ),
-              );
-            } else {
-              return const Center(
-                child: Material(
-                  child: Text(''),
-                ),
-              );
-            }
-          },
-        )
-        );
+      ),
+      body: Consumer<RestaurantProvider>(
+        builder: (context, state, _) {
+          if (state.state == ResultState.loading) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state.state == ResultState.hasData) {
+            var restaurant =
+                state.result.map((restaurant) => restaurant).toList();
+            final filteredRestaurants = restaurant
+                .where((r) =>
+                    r.name.toLowerCase().contains(_searchQuery.toLowerCase()))
+                .toList();
+            return _content(filteredRestaurants, state);
+          } else if (state.state == ResultState.noData) {
+            return Center(
+              child: Material(
+                child: Text(state.message),
+              ),
+            );
+          } else if (state.state == ResultState.error) {
+            return Center(child: _buildErrorContent(state.message));
+          } else {
+            return const Center(
+              child: Material(
+                child: Text(''),
+              ),
+            );
+          }
+        },
+      ),
+    );
+  }
+
+  Widget _content(List<Restaurant> restaurant, RestaurantProvider state) {
+    return RefreshIndicator(
+      color: Colors.white,
+      backgroundColor: Colors.deepPurple,
+      onRefresh: () async {
+        await state.fetchAllRestaurant();
+      },
+      child: state.state == ResultState.error
+          ? _buildErrorContent(state.message)
+          : ListView.builder(
+              itemCount: restaurant.length + 1,
+              itemBuilder: (context, index) {
+                if (index == 0) {
+                  return _banner();
+                } else {
+                  final restaurantItem = restaurant[index - 1];
+                  return _buildRestaurantItem(context, restaurantItem);
+                }
+              },
+            ),
+    );
+  }
+
+  Widget _buildErrorContent(String errorMessage) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(errorMessage),
+          ElevatedButton(
+            onPressed: () async {
+              await Provider.of<RestaurantProvider>(context, listen: false)
+                  .fetchAllRestaurant();
+            },
+            child: const Text('Retry'),
+          ),
+        ],
+      ),
+    );
   }
 
   Padding _banner() {
@@ -97,12 +109,6 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "Kategori",
-              style: TextStyle(fontWeight: FontWeight.w600),
-            ),
-            _restaurantCategoryList(),
-            const SizedBox(height: 17),
             const Text(
               "Cari Restoran",
               style: TextStyle(fontWeight: FontWeight.w600),
@@ -153,50 +159,12 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
             borderSide: BorderSide.none,
           ),
         ),
-        // controller: _searchQueryController,
         onChanged: (value) {
           setState(() {
             _searchQuery = value;
           });
         },
       ),
-    );
-  }
-
-  Container _restaurantCategoryList() {
-    return Container(
-      height: 100,
-      child: ListView(
-          scrollDirection: Axis.horizontal,
-          children: restaurantCategoryList.map((category) {
-            return Container(
-              margin: const EdgeInsets.symmetric(
-                horizontal: 20,
-              ),
-              child: InkWell(
-                onTap: () {},
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(18),
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          category.imageAsset,
-                          fit: BoxFit.cover,
-                          scale: 12,
-                        ),
-                        const SizedBox(
-                          height: 11,
-                        ),
-                        Text(
-                          category.name,
-                          style: const TextStyle(fontSize: 12),
-                        )
-                      ]),
-                ),
-              ),
-            );
-          }).toList()),
     );
   }
 
@@ -209,7 +177,7 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
         child: InkWell(
           onTap: () {
             Navigator.pushNamed(context, "/restaurant-detail",
-                arguments: restaurant);
+                arguments: {'id': restaurant.id, 'restaurant': restaurant});
           },
           child: Container(
             height: 100,

@@ -92,7 +92,7 @@ class _SplashScreenState extends State<SplashScreen>
             FadeTransition(
               opacity: _fadeAnimation,
               child: const Text(
-                "Restinfo",
+                "Restfo",
                 style: TextStyle(
                   fontStyle: FontStyle.italic,
                   color: Colors.white,

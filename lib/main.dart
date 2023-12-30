@@ -26,8 +26,8 @@ class MyApp extends StatelessWidget {
           textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme)),
       initialRoute: "/",
       routes: {
-        '/': (context) => SplashScreen(),
-        '/restaurant-list': (context) => RestaurantListPage(),
+        '/': (context) => const SplashScreen(),
+        '/restaurant-list': (context) => const RestaurantListPage(),
         '/restaurant-detail': (context) => RestaurantDetailPage(
            restaurant: ModalRoute.of(context)?.settings.arguments as Restaurant,
         )

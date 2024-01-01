@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:restaurant_app/data/model/restaurant.dart';
+import 'package:restaurant_app/provider/restaurant_provider.dart';
 
 class RestaurantDetailPage extends StatelessWidget {
   final Restaurant restaurant;
@@ -9,30 +11,39 @@ class RestaurantDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        bottom: false,
-        child: SingleChildScrollView(
-            child: Stack(
-          children: [
-            Column(
-              children: [
-                Image.network(
-                  restaurant.pictureId,
-                  width: MediaQuery.of(context).size.width,
-                  height: 350,
-                  fit: BoxFit.cover,
-                ),
-                _content(),
-              ],
-            ),
-            _navButton(context),
-          ],
-        )),
+      body: Consumer<RestaurantProvider>(
+        builder: (context, state, child) {
+          if (state.detailResult == null) {
+            state.fetchRestaurantDetail(state.detailResult.id);
+            return const CircularProgressIndicator();
+          } else {
+            return SafeArea(
+              bottom: false,
+              child: SingleChildScrollView(
+                  child: Stack(
+                children: [
+                  Column(
+                    children: [
+                      Image.network(
+                        restaurant.pictureId,
+                        width: MediaQuery.of(context).size.width,
+                        height: 350,
+                        fit: BoxFit.cover,
+                      ),
+                      _content(restaurant),
+                    ],
+                  ),
+                  _navButton(context),
+                ],
+              )),
+            );
+          }
+        },
       ),
     );
   }
 
-  Padding _content() {
+  Padding _content(restaurant) {
     return Padding(
       padding: const EdgeInsets.all(17),
       child: Column(
@@ -180,7 +191,9 @@ class RestaurantDetailPage extends StatelessWidget {
                                 ),
                                 Text(
                                   drink.name,
-                                  style: TextStyle(fontSize: 12,),
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                  ),
                                 )
                               ]),
                         ));

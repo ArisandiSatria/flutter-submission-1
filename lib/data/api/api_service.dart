@@ -11,21 +11,21 @@ class Api {
     final response = await http.get(Uri.parse("$_url/list"));
 
     if (response.statusCode == 200) {
-        return Welcome.fromJson(json.decode(response.body));
-      } else {
-        throw Exception('Failed to load restaurant list');
-      }
+      return Welcome.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Failed to load restaurant list');
+    }
   }
 
-  Future<Welcome> fetchRestaurantDetail(String id) async {
+  Future<Restaurant> fetchRestaurantDetail(String id) async {
     final response = await http.get(Uri.parse("$_url/detail/$id"));
 
     if (response.statusCode == 200) {
       debugPrint(response.body);
-        return Welcome.fromJson(json.decode(response.body));
-      } else {
-        throw Exception('Failed to load restaurant detail');
-      }
+      return Restaurant.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Failed to load restaurant detail');
+    }
   }
 
   Future<Restaurant> fetchRestaurantSearch(String searchQuery) async {
@@ -33,22 +33,21 @@ class Api {
 
     if (response.statusCode == 200) {
       debugPrint(response.body);
-        return Restaurant.fromJson(json.decode(response.body));
-      } else {
-        throw Exception('Failed to load restaurant detail');
-      }
-  
+      return Restaurant.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Failed to load restaurant detail');
+    }
   }
+
   Future<http.Response> fetchRestaurantReview(String name, review) {
     return http.post(Uri.parse("$_url/review"),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8'
-    },
-    body: jsonEncode(<String, String>{
-      'name': name,
-      'review': review,
-      'date': DateFormat('yyyy-MM-dd').format(DateTime.now())
-    })
-    );
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8'
+        },
+        body: jsonEncode(<String, String>{
+          'name': name,
+          'review': review,
+          'date': DateFormat('yyyy-MM-dd').format(DateTime.now())
+        }));
   }
 }

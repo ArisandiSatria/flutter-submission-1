@@ -177,7 +177,7 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
         child: InkWell(
           onTap: () {
             Navigator.pushNamed(context, "/restaurant-detail",
-                arguments: {'id': restaurant.id, 'restaurant': restaurant});
+                arguments: restaurant);
           },
           child: Container(
             height: 100,

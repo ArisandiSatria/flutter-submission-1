@@ -12,12 +12,12 @@ class RestaurantProvider extends ChangeNotifier {
   }
 
   late List<Restaurant> _restaurants;
-  late Restaurant _restaurant;
+  // late Restaurant _restaurant;
   late ResultState _state;
   String _message = '';
 
   List<Restaurant> get result => _restaurants;
-  Restaurant get detailResult => _restaurant;
+  // Restaurant get detailResult => _restaurant;
   ResultState get state => _state;
   String get message => _message;
 
@@ -40,30 +40,30 @@ class RestaurantProvider extends ChangeNotifier {
       _message = 'No Internet Connection!';
     }
   }
-  Future<void> _fetchRestaurantDetail(String id) async {
-    try {
-      _state = ResultState.loading;
-      notifyListeners();
-      final response = await api.fetchRestaurantDetail(id);
-      if (response != null) {
-        _state = ResultState.noData;
-        _message = 'Empty Data';
-      } else {
-        _state = ResultState.hasData;
-        _restaurant = response;
-      }
-      notifyListeners();
-    } catch (e) {
-      _state = ResultState.error;
-      notifyListeners();
-      _message = 'No Internet Connection!';
-    }
-  }
+  // Future<void> _fetchRestaurantDetail(String id) async {
+  //   try {
+  //     _state = ResultState.loading;
+  //     notifyListeners();
+  //     final response = await api.fetchRestaurantDetail(id);
+  //     if (response != null) {
+  //       _state = ResultState.noData;
+  //       _message = 'Empty Data';
+  //     } else {
+  //       _state = ResultState.hasData;
+  //       _restaurant = response;
+  //     }
+  //     notifyListeners();
+  //   } catch (e) {
+  //     _state = ResultState.error;
+  //     notifyListeners();
+  //     _message = 'No Internet Connection!';
+  //   }
+  // }
 
    Future<void> fetchAllRestaurant() async {
     await _fetchAllRestaurant();
   }
-   Future<void> fetchRestaurantDetail(id) async {
-    await _fetchRestaurantDetail(id);
-  }
+  //  Future<void> fetchRestaurantDetail(id) async {
+  //   await _fetchRestaurantDetail(id);
+  // }
 }

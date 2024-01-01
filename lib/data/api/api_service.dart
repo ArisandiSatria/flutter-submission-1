@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:restaurant_app/data/model/detail_restaurant.dart';
 import 'package:restaurant_app/data/model/restaurant.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -17,12 +18,12 @@ class Api {
     }
   }
 
-  Future<Restaurant> fetchRestaurantDetail(String id) async {
+  Future<DetailRestaurant> fetchRestaurantDetail(String id) async {
     final response = await http.get(Uri.parse("$_url/detail/$id"));
 
     if (response.statusCode == 200) {
       debugPrint(response.body);
-      return Restaurant.fromJson(json.decode(response.body));
+      return DetailRestaurant.fromJson(json.decode(response.body));
     } else {
       throw Exception('Failed to load restaurant detail');
     }

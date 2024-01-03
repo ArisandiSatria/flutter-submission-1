@@ -42,8 +42,4 @@ class DetailProvider extends ChangeNotifier {
       return _message = 'Check Your Internet Connection !';
     }
   }
-
-  // Future<void> fetchRestaurantDetail(id) async {
-  //   await _fetchRestaurantDetail(id);
-  // }
 }

@@ -4,11 +4,12 @@ import 'package:restaurant_app/data/model/restaurant.dart';
 
 enum ResultState { loading, noData, hasData, error }
 
-class RestaurantProvider extends ChangeNotifier {
+class SearchProvider extends ChangeNotifier {
   final Api api;
+  late final String name;
 
-  RestaurantProvider({required this.api}) {
-    _fetchAllRestaurant();
+  SearchProvider({required this.api, this.name = ''}) {
+    fetchSearchRestaurant(name);
   }
 
   late List<Restaurant> _restaurants;
@@ -19,11 +20,11 @@ class RestaurantProvider extends ChangeNotifier {
   ResultState get state => _state;
   String get message => _message;
 
-  Future<void> _fetchAllRestaurant() async {
+  Future<void> fetchSearchRestaurant(String name) async {
     try {
       _state = ResultState.loading;
       notifyListeners();
-      final response = await api.fetchRestaurantList();
+      final response = await api.fetchRestaurantSearch(name);
       if (response.restaurants.isEmpty) {
         _state = ResultState.noData;
         _message = 'Empty Data';
@@ -37,9 +38,5 @@ class RestaurantProvider extends ChangeNotifier {
       notifyListeners();
       _message = 'No Internet Connection!';
     }
-  }
-
-   Future<void> fetchAllRestaurant() async {
-    await _fetchAllRestaurant();
   }
 }

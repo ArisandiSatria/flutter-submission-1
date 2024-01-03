@@ -12,7 +12,6 @@ class RestaurantListPage extends StatefulWidget {
 }
 
 class _RestaurantListPageState extends State<RestaurantListPage> {
-  String _searchQuery = '';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,9 +25,21 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
             Text(
               "Temukan restoran pilihan anda dengan mudah!",
               style: TextStyle(fontSize: 11, color: Colors.grey),
-            )
+            ),
           ],
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.search,
+              size: 32,
+              color: Colors.deepPurple,
+            ),
+            onPressed: () {
+              Navigator.pushNamed(context, "/restaurant-search");
+            },
+          ),
+        ],
       ),
       body: Consumer<RestaurantProvider>(
         builder: (context, state, _) {
@@ -37,11 +48,7 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
           } else if (state.state == ResultState.hasData) {
             var restaurant =
                 state.result.map((restaurant) => restaurant).toList();
-            final filteredRestaurants = restaurant
-                .where((r) =>
-                    r.name.toLowerCase().contains(_searchQuery.toLowerCase()))
-                .toList();
-            return _content(filteredRestaurants, state);
+            return _content(restaurant, state);
           } else if (state.state == ResultState.noData) {
             return Center(
               child: Material(
@@ -104,68 +111,17 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
   }
 
   Padding _banner() {
-    return Padding(
-        padding: const EdgeInsets.only(right: 17, left: 17, top: 20),
+    return const Padding(
+        padding: EdgeInsets.only(right: 17, left: 17, top: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "Cari Restoran",
-              style: TextStyle(fontWeight: FontWeight.w600),
-            ),
-            const SizedBox(height: 17),
-            _search(),
-            const SizedBox(height: 17),
-            const Text(
+            Text(
               "Daftar Restoran",
               style: TextStyle(fontWeight: FontWeight.w600),
             ),
           ],
         ));
-  }
-
-  Container _search() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            spreadRadius: 1,
-            blurRadius: 5,
-            offset: const Offset(0, 5),
-          ),
-        ],
-      ),
-      child: TextField(
-        style: const TextStyle(fontSize: 14),
-        decoration: InputDecoration(
-          fillColor: Colors.white,
-          filled: true,
-          contentPadding: const EdgeInsets.all(15),
-          hintText: 'Cari Restoran...',
-          hintStyle: const TextStyle(color: Color(0xffDDDADA), fontSize: 12),
-          prefixIcon: InkWell(
-            onTap: () {},
-            child: const Icon(
-              Icons.search,
-              size: 32,
-              color: Colors.deepPurple,
-            ),
-          ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(15),
-            borderSide: BorderSide.none,
-          ),
-        ),
-        onChanged: (value) {
-          setState(() {
-            _searchQuery = value;
-          });
-        },
-      ),
-    );
   }
 
   Widget _buildRestaurantItem(BuildContext context, Restaurant restaurant) {

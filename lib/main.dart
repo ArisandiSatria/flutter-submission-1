@@ -5,9 +5,11 @@ import 'package:restaurant_app/data/api/api_service.dart';
 import 'package:restaurant_app/data/model/restaurant.dart';
 import 'package:restaurant_app/page/restaurant_detail_screen.dart';
 import 'package:restaurant_app/page/restaurant_list_screen.dart';
+import 'package:restaurant_app/page/restaurant_search_screen.dart';
 import 'package:restaurant_app/page/splash_screen.dart';
 import 'package:restaurant_app/provider/detail_provider.dart';
 import 'package:restaurant_app/provider/restaurant_provider.dart';
+import 'package:restaurant_app/provider/search_provider.dart';
 
 void main() {
   runApp(const MyApp(),);
@@ -22,6 +24,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => RestaurantProvider(api: Api())),
         ChangeNotifierProvider(create: (context) => DetailProvider(api: Api())),
+        ChangeNotifierProvider(create: (context) => SearchProvider(api: Api(), name: "")),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
@@ -33,7 +36,8 @@ class MyApp extends StatelessWidget {
           '/restaurant-list': (context) => const RestaurantListPage(),
           '/restaurant-detail': (context) => RestaurantDetailPage(
              restaurant: ModalRoute.of(context)?.settings.arguments as Restaurant,
-          )
+          ),
+          '/restaurant-search': (context) => RestaurantSearch()
         },
         debugShowCheckedModeBanner: false,
       ),

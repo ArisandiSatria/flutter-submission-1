@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:restaurant_app/data/api/api_service.dart';
 import 'package:restaurant_app/data/model/restaurant.dart';
 import 'package:restaurant_app/provider/search_provider.dart';
 
@@ -20,60 +19,93 @@ class RestaurantSearch extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: TextField(
-          controller: _searchController,
-          decoration: const InputDecoration(
-            hintText: 'Cari Restoran...',
-          ),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.search,
-              size: 32,
-              color: Colors.deepPurple,
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          title: TextField(
+            controller: _searchController,
+            decoration: const InputDecoration(
+              hintText: 'Cari Restoran...',
             ),
-            onPressed: () {
-              _searchRestaurants(context);
-            },
           ),
-        ],
-      ),
-      body: Consumer<SearchProvider>(
-          builder: (context, searchProvider, _) {
-            if (searchProvider.state == ResultState.loading) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (searchProvider.state == ResultState.hasData) {
-              return _content(searchProvider.result);
-            } else if (searchProvider.state == ResultState.noData) {
-              return Center(
-                child: Material(
-                  child: Text(searchProvider.message),
-                ),
-              );
-            } else {
-              return const Center(
-                child: Material(
-                  child: Text(''),
-                ),
-              );
+          actions: [
+            IconButton(
+              icon: const Icon(
+                Icons.search,
+                size: 32,
+                color: Colors.deepPurple,
+              ),
+              onPressed: () {
+                _searchRestaurants(context);
+              },
+            ),
+          ],
+        ),
+        body: GestureDetector(
+          onTap: () {
+            // Hide keyboard when tapped outside of the keyboard or text field
+            FocusScopeNode currentFocus = FocusScope.of(context);
+            if (!currentFocus.hasPrimaryFocus &&
+                currentFocus.focusedChild != null) {
+              FocusManager.instance.primaryFocus?.unfocus();
             }
           },
-        ),
-      );
+          child: Consumer<SearchProvider>(
+            builder: (context, searchProvider, _) {
+              if (searchProvider.state == ResultState.loading) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (searchProvider.state == ResultState.hasData) {
+                debugPrint(searchProvider.toString());
+                return Text("TRUE");
+              } else if (searchProvider.state == ResultState.noData) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.restaurant_menu,
+                        size: 80,
+                        color: Colors.grey,
+                      ),
+                      Text(
+                        "Enter Restaurant Name",
+                        style: TextStyle(color: Colors.grey),
+                      )
+                    ],
+                  ),
+                );
+              } else {
+                return Center(
+                  child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 50),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'assets/loupe.png',
+                            fit: BoxFit.cover,
+                            scale: 12,
+                            color: Colors.grey,
+                          ),
+                          Text("Not Found")
+                        ],
+                      )),
+                );
+              }
+            },
+          ),
+        ));
   }
 
   Widget _content(List<Restaurant> restaurant) {
     return ListView.builder(
       itemCount: restaurant.length,
       itemBuilder: (context, index) {
-        return _buildRestaurantItem(restaurant: restaurant[index]);
+        return _buildRestaurantItem(context, restaurant[index]);
       },
     );
   }
 
-  Widget _buildRestaurantItem(Restaurant restaurant) {
+  Widget _buildRestaurantItem(BuildContext context, Restaurant restaurant) {
     return ClipRRect(
       clipBehavior: Clip.hardEdge,
       borderRadius: BorderRadius.circular(18),

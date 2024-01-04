@@ -155,7 +155,7 @@ class _RestaurantDetailPageState extends State<RestaurantDetailPage> {
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
-              children: restaurant.categories?.map((resto) {
+              children: restaurant.categories.map((resto) {
                     return Padding(
                       padding: const EdgeInsets.only(right: 8),
                       child: Container(
@@ -173,8 +173,7 @@ class _RestaurantDetailPageState extends State<RestaurantDetailPage> {
                         ),
                       ),
                     );
-                  }).toList() ??
-                  [],
+                  }).toList(),
             ),
           ),
           SizedBox(

@@ -6,7 +6,7 @@ enum ResultState { loading, noData, hasData, error }
 
 class SearchProvider extends ChangeNotifier {
   final Api api;
-  late final String name;
+  final String name;
 
   SearchProvider({required this.api, this.name = ''}) {
     fetchSearchRestaurant(name);
@@ -22,21 +22,22 @@ class SearchProvider extends ChangeNotifier {
 
   Future<void> fetchSearchRestaurant(String name) async {
     try {
+      if (name.isEmpty) {
+        _state = ResultState.noData;
+        notifyListeners();
+        _message = 'Enter Restaurant Name';
+      }
       _state = ResultState.loading;
       notifyListeners();
       final response = await api.fetchRestaurantSearch(name);
-      if (response.restaurants.isEmpty) {
-        _state = ResultState.noData;
-        _message = 'Empty Data';
-      } else {
-        _state = ResultState.hasData;
-        _restaurants = response.restaurants;
-      }
+      print(response);
+      _state = ResultState.hasData;
       notifyListeners();
+      _restaurants = response.restaurants;
     } catch (e) {
       _state = ResultState.error;
       notifyListeners();
-      _message = 'No Internet Connection!';
+      _message = 'Check Your Internet Connection !';
     }
   }
 }

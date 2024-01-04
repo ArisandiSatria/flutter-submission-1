@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_app/data/model/restaurant.dart';
 import 'package:restaurant_app/provider/restaurant_provider.dart';
-import 'package:flutter/gestures.dart';
 
 class RestaurantListPage extends StatefulWidget {
   const RestaurantListPage({Key? key}) : super(key: key);
@@ -58,10 +57,20 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
           } else if (state.state == ResultState.error) {
             return Center(child: _buildErrorContent(state.message));
           } else {
-            return const Center(
-              child: Material(
-                child: Text(''),
-              ),
+            return Center(
+              child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 50),
+                  child: Column(
+                    children: [
+                      Image.asset(
+                        'assets/images/loupe.png',
+                        fit: BoxFit.cover,
+                        scale: 12,
+                        color: Colors.grey,
+                      ),
+                      Text("Not Data!")
+                    ],
+                  )),
             );
           }
         },

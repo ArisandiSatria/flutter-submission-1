@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:restaurant_app/data/api/api_service.dart';
 import 'package:restaurant_app/data/model/detail_restaurant.dart';
-import 'package:restaurant_app/data/model/restaurant.dart';
 
 enum ResultState { loading, noData, hasData, error }
 
@@ -17,9 +16,7 @@ class DetailProvider extends ChangeNotifier {
   String _message = '';
 
   DetailRestaurant get detailResult => _restaurant;
-
   ResultState get state => _state;
-
   String get message => _message;
 
   Future<dynamic> fetchDetailRestaurant(String id) async {

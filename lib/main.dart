@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => RestaurantProvider(api: Api())),
         ChangeNotifierProvider(create: (context) => DetailProvider(api: Api())),
-        ChangeNotifierProvider(create: (context) => SearchProvider(api: Api(), name: "")),
+        ChangeNotifierProvider(create: (context) => SearchProvider(api: Api())),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',

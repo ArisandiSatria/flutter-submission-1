@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:restaurant_app/data/api/api_service.dart';
 import 'package:restaurant_app/data/model/restaurant.dart';
 import 'package:restaurant_app/provider/search_provider.dart';
 
@@ -18,7 +19,7 @@ class _RestaurantSearchState extends State<RestaurantSearch> {
     // String searchQuery = _searchController.text;
     if (_searchController.text.isNotEmpty) {
       Provider.of<SearchProvider>(context, listen: false)
-          .fetchSearchRestaurant(search);
+          .fetchSearchRestaurant(_searchController.text);
     }
   }
 
@@ -31,9 +32,9 @@ class _RestaurantSearchState extends State<RestaurantSearch> {
           decoration: const InputDecoration(
             hintText: 'Cari Restoran...',
           ),
-          onChanged: (String s){
+          onSubmitted: (String s){
             setState(() {
-              _searchController.text = s;
+              // _searchController.text = s;
               _searchRestaurants(context, s);
             });
           },
@@ -53,42 +54,42 @@ class _RestaurantSearchState extends State<RestaurantSearch> {
       ),
       body: Consumer<SearchProvider>(
         builder: (context, searchProvider, _) {
-          switch(searchProvider.state){
-            case ResultState.loading:
-              return const Center(child: CircularProgressIndicator());
-            case ResultState.hasData:
-              return _content(searchProvider.result, context);
-            case ResultState.noData:
-              return Center(
-                child: Material(
-                  child: Text(searchProvider.message),
-                ),
-              );
-            default:
-              return const Center(
-                child: Material(
-                  child: Text(''),
-                ),
-              );
+          // switch(searchProvider.state){
+          //   case ResultState.loading:
+          //     return const Center(child: CircularProgressIndicator());
+          //   case ResultState.hasData:
+          //     return _content(searchProvider.result.restaurants, context);
+          //   case ResultState.noData:
+          //     return Center(
+          //       child: Material(
+          //         child: Text(searchProvider.message),
+          //       ),
+          //     );
+          //   default:
+          //     return const Center(
+          //       child: Material(
+          //         child: Text(''),
+          //       ),
+          //     );
+          // }
+          if (searchProvider.state == ResultState.loading) {
+            return const Center(child: CircularProgressIndicator());
           }
-          // if (searchProvider.state == ResultState.loading) {
-          //   return const Center(child: CircularProgressIndicator());
-          // }
-          // if (searchProvider.state == ResultState.hasData) {
-          //   return _content(searchProvider.result, context);
-          // }
-          // if (searchProvider.state == ResultState.noData) {
-          //   return Center(
-          //     child: Material(
-          //       child: Text(searchProvider.message),
-          //     ),
-          //   );
-          // }
-          // return const Center(
-          //   child: Material(
-          //     child: Text(''),
-          //   ),
-          // );
+          else if (searchProvider.state == ResultState.hasData) {
+            return _content(searchProvider.result.restaurants, context);
+          }
+          else if (searchProvider.state == ResultState.noData) {
+            return Center(
+              child: Material(
+                child: Text(searchProvider.message),
+              ),
+            );
+          }
+          return const Center(
+            child: Material(
+              child: Text(''),
+            ),
+          );
         },
       ),
     );
@@ -124,7 +125,7 @@ class _RestaurantSearchState extends State<RestaurantSearch> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child: Image.network(
-                    restaurant.name,
+                    restaurant.pictureId,
                     width: 100,
                     errorBuilder: (ctx, error, _) =>
                         const Center(child: Icon(Icons.error)),

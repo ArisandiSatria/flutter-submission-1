@@ -3,109 +3,91 @@ import 'package:provider/provider.dart';
 import 'package:restaurant_app/data/model/restaurant.dart';
 import 'package:restaurant_app/provider/search_provider.dart';
 
-class RestaurantSearch extends StatelessWidget {
+class RestaurantSearch extends StatefulWidget {
+
+  const RestaurantSearch({super.key});
+
+  @override
+  State<RestaurantSearch> createState() => _RestaurantSearchState();
+}
+
+class _RestaurantSearchState extends State<RestaurantSearch> {
   final TextEditingController _searchController = TextEditingController();
 
-  RestaurantSearch({super.key});
-
   Future<void> _searchRestaurants(BuildContext context) async {
-    String searchQuery = _searchController.text;
-    if (searchQuery.isNotEmpty) {
+    // String searchQuery = _searchController.text;
+    if (_searchController.text.isNotEmpty) {
       Provider.of<SearchProvider>(context, listen: false)
-          .fetchSearchRestaurant(searchQuery);
+          .fetchSearchRestaurant(_searchController.text);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          title: TextField(
-            controller: _searchController,
-            decoration: const InputDecoration(
-              hintText: 'Cari Restoran...',
-            ),
+      appBar: AppBar(
+        title: TextField(
+          controller: _searchController,
+          decoration: const InputDecoration(
+            hintText: 'Cari Restoran...',
           ),
-          actions: [
-            IconButton(
-              icon: const Icon(
-                Icons.search,
-                size: 32,
-                color: Colors.deepPurple,
-              ),
-              onPressed: () {
-                _searchRestaurants(context);
-              },
-            ),
-          ],
-        ),
-        body: GestureDetector(
-          onTap: () {
-            // Hide keyboard when tapped outside of the keyboard or text field
-            FocusScopeNode currentFocus = FocusScope.of(context);
-            if (!currentFocus.hasPrimaryFocus &&
-                currentFocus.focusedChild != null) {
-              FocusManager.instance.primaryFocus?.unfocus();
-            }
+          onSubmitted: (String s){
+            setState(() {
+              // _searchController.text = s;
+              _searchRestaurants(context);
+            });
           },
-          child: Consumer<SearchProvider>(
-            builder: (context, searchProvider, _) {
-              if (searchProvider.state == ResultState.loading) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (searchProvider.state == ResultState.hasData) {
-                debugPrint(searchProvider.toString());
-                return Text("TRUE");
-              } else if (searchProvider.state == ResultState.noData) {
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.restaurant_menu,
-                        size: 80,
-                        color: Colors.grey,
-                      ),
-                      Text(
-                        "Enter Restaurant Name",
-                        style: TextStyle(color: Colors.grey),
-                      )
-                    ],
-                  ),
-                );
-              } else {
-                return Center(
-                  child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 50),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            'assets/loupe.png',
-                            fit: BoxFit.cover,
-                            scale: 12,
-                            color: Colors.grey,
-                          ),
-                          Text("Not Found")
-                        ],
-                      )),
-                );
-              }
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.search,
+              size: 32,
+              color: Colors.deepPurple,
+            ),
+            onPressed: () {
+              // _searchRestaurants(context, _searchController.text);
             },
           ),
-        ));
+        ],
+      ),
+      body: Consumer<SearchProvider>(
+        builder: (context, searchProvider, _) {
+          if (searchProvider.state == ResultState.loading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          else if (searchProvider.state == ResultState.hasData) {
+            return _content(searchProvider.result.restaurants, context);
+          }
+          else if (searchProvider.state == ResultState.noData) {
+            return Center(
+              child: Material(
+                child: Text(searchProvider.message),
+              ),
+            );
+          }
+          return const Center(
+            child: Material(
+              child: Text(''),
+            ),
+          );
+        },
+      ),
+    );
   }
 
-  Widget _content(List<Restaurant> restaurant) {
+  Widget _content(List<Restaurant> restaurant, BuildContext context) {
     return ListView.builder(
+      shrinkWrap: true,
       itemCount: restaurant.length,
       itemBuilder: (context, index) {
-        return _buildRestaurantItem(context, restaurant[index]);
+        debugPrint(restaurant[index].name);
+        return _buildRestaurantItem(restaurant[index], context);
       },
     );
   }
 
-  Widget _buildRestaurantItem(BuildContext context, Restaurant restaurant) {
+  Widget _buildRestaurantItem(Restaurant restaurant, BuildContext context) {
     return ClipRRect(
       clipBehavior: Clip.hardEdge,
       borderRadius: BorderRadius.circular(18),
@@ -124,7 +106,7 @@ class RestaurantSearch extends StatelessWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child: Image.network(
-                    restaurant.name,
+                    restaurant.pictureId,
                     width: 100,
                     errorBuilder: (ctx, error, _) =>
                         const Center(child: Icon(Icons.error)),

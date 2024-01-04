@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:restaurant_app/data/api/api_service.dart';
 import 'package:restaurant_app/data/model/restaurant.dart';
 import 'package:restaurant_app/provider/search_provider.dart';
 
-class RestaurantSearch extends StatelessWidget {
+class RestaurantSearch extends StatefulWidget {
+
+  const RestaurantSearch({super.key});
+
+  @override
+  State<RestaurantSearch> createState() => _RestaurantSearchState();
+}
+
+class _RestaurantSearchState extends State<RestaurantSearch> {
   final TextEditingController _searchController = TextEditingController();
 
-  RestaurantSearch({super.key});
-
-  Future<void> _searchRestaurants(BuildContext context) async {
-    String searchQuery = _searchController.text;
-    if (searchQuery.isNotEmpty) {
+  Future<void> _searchRestaurants(BuildContext context, String search) async {
+    // String searchQuery = _searchController.text;
+    if (_searchController.text.isNotEmpty) {
       Provider.of<SearchProvider>(context, listen: false)
-          .fetchSearchRestaurant(searchQuery);
+          .fetchSearchRestaurant(search);
     }
   }
 
@@ -26,6 +31,12 @@ class RestaurantSearch extends StatelessWidget {
           decoration: const InputDecoration(
             hintText: 'Cari Restoran...',
           ),
+          onChanged: (String s){
+            setState(() {
+              _searchController.text = s;
+              _searchRestaurants(context, s);
+            });
+          },
         ),
         actions: [
           IconButton(
@@ -35,45 +46,66 @@ class RestaurantSearch extends StatelessWidget {
               color: Colors.deepPurple,
             ),
             onPressed: () {
-              _searchRestaurants(context);
+              // _searchRestaurants(context, _searchController.text);
             },
           ),
         ],
       ),
       body: Consumer<SearchProvider>(
-          builder: (context, searchProvider, _) {
-            if (searchProvider.state == ResultState.loading) {
+        builder: (context, searchProvider, _) {
+          switch(searchProvider.state){
+            case ResultState.loading:
               return const Center(child: CircularProgressIndicator());
-            } else if (searchProvider.state == ResultState.hasData) {
-              return _content(searchProvider.result);
-            } else if (searchProvider.state == ResultState.noData) {
+            case ResultState.hasData:
+              return _content(searchProvider.result, context);
+            case ResultState.noData:
               return Center(
                 child: Material(
                   child: Text(searchProvider.message),
                 ),
               );
-            } else {
+            default:
               return const Center(
                 child: Material(
                   child: Text(''),
                 ),
               );
-            }
-          },
-        ),
-      );
+          }
+          // if (searchProvider.state == ResultState.loading) {
+          //   return const Center(child: CircularProgressIndicator());
+          // }
+          // if (searchProvider.state == ResultState.hasData) {
+          //   return _content(searchProvider.result, context);
+          // }
+          // if (searchProvider.state == ResultState.noData) {
+          //   return Center(
+          //     child: Material(
+          //       child: Text(searchProvider.message),
+          //     ),
+          //   );
+          // }
+          // return const Center(
+          //   child: Material(
+          //     child: Text(''),
+          //   ),
+          // );
+        },
+      ),
+    );
   }
 
-  Widget _content(List<Restaurant> restaurant) {
+  Widget _content(List<Restaurant> restaurant, BuildContext context) {
     return ListView.builder(
+      shrinkWrap: true,
       itemCount: restaurant.length,
       itemBuilder: (context, index) {
-        return _buildRestaurantItem(restaurant: restaurant[index]);
+        debugPrint(restaurant[index].name);
+        return _buildRestaurantItem(restaurant[index], context);
       },
     );
   }
 
-  Widget _buildRestaurantItem(Restaurant restaurant) {
+  Widget _buildRestaurantItem(Restaurant restaurant, BuildContext context) {
     return ClipRRect(
       clipBehavior: Clip.hardEdge,
       borderRadius: BorderRadius.circular(18),

@@ -9,6 +9,7 @@ class SearchProvider extends ChangeNotifier {
   late final String name;
 
   SearchProvider({required this.api, this.name = ''}) {
+    _restaurants = [];
     fetchSearchRestaurant(name);
   }
 
@@ -25,6 +26,7 @@ class SearchProvider extends ChangeNotifier {
       _state = ResultState.loading;
       notifyListeners();
       final response = await api.fetchRestaurantSearch(name);
+      debugPrint(response.restaurants.length.toString());
       if (response.restaurants.isEmpty) {
         _state = ResultState.noData;
         _message = 'Empty Data';

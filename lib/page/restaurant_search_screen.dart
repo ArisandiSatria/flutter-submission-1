@@ -15,7 +15,7 @@ class RestaurantSearch extends StatefulWidget {
 class _RestaurantSearchState extends State<RestaurantSearch> {
   final TextEditingController _searchController = TextEditingController();
 
-  Future<void> _searchRestaurants(BuildContext context, String search) async {
+  Future<void> _searchRestaurants(BuildContext context) async {
     // String searchQuery = _searchController.text;
     if (_searchController.text.isNotEmpty) {
       Provider.of<SearchProvider>(context, listen: false)
@@ -35,7 +35,7 @@ class _RestaurantSearchState extends State<RestaurantSearch> {
           onSubmitted: (String s){
             setState(() {
               // _searchController.text = s;
-              _searchRestaurants(context, s);
+              _searchRestaurants(context);
             });
           },
         ),
@@ -54,24 +54,6 @@ class _RestaurantSearchState extends State<RestaurantSearch> {
       ),
       body: Consumer<SearchProvider>(
         builder: (context, searchProvider, _) {
-          // switch(searchProvider.state){
-          //   case ResultState.loading:
-          //     return const Center(child: CircularProgressIndicator());
-          //   case ResultState.hasData:
-          //     return _content(searchProvider.result.restaurants, context);
-          //   case ResultState.noData:
-          //     return Center(
-          //       child: Material(
-          //         child: Text(searchProvider.message),
-          //       ),
-          //     );
-          //   default:
-          //     return const Center(
-          //       child: Material(
-          //         child: Text(''),
-          //       ),
-          //     );
-          // }
           if (searchProvider.state == ResultState.loading) {
             return const Center(child: CircularProgressIndicator());
           }

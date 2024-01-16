@@ -3,12 +3,18 @@ import 'package:provider/provider.dart';
 import 'package:restaurant_app/data/api/api_service.dart';
 import 'package:restaurant_app/data/model/restaurant.dart';
 import 'package:restaurant_app/provider/detail_provider.dart';
+import 'package:restaurant_app/data/result_state.dart';
+import 'package:restaurant_app/provider/favorite_provider.dart';
 
 class RestaurantDetailPage extends StatefulWidget {
   final Restaurant restaurant;
+  final bool favorited;
 
-  const RestaurantDetailPage({Key? key, required this.restaurant})
-      : super(key: key);
+  RestaurantDetailPage({
+    Key? key,
+    required this.restaurant,
+    this.favorited = false,
+  }) : super(key: key);
 
   @override
   State<RestaurantDetailPage> createState() => _RestaurantDetailPageState();
@@ -26,6 +32,8 @@ class _RestaurantDetailPageState extends State<RestaurantDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    bool favorited = widget.favorited;
+    String? imageBaseUrl = 'https://restaurant-api.dicoding.dev/images/medium/';
     return ChangeNotifierProvider(
       create: (_) => DetailProvider(
         api: Api(),
@@ -45,7 +53,7 @@ class _RestaurantDetailPageState extends State<RestaurantDetailPage> {
                     Column(
                       children: [
                         Image.network(
-                          state.detailResult.restaurant.pictureId,
+                          '$imageBaseUrl${state.detailResult.restaurant.pictureId}',
                           width: MediaQuery.of(context).size.width,
                           height: 350,
                           fit: BoxFit.cover,
@@ -53,7 +61,7 @@ class _RestaurantDetailPageState extends State<RestaurantDetailPage> {
                         _content(state.detailResult.restaurant),
                       ],
                     ),
-                    _navButton(context),
+                    _navButton(context, favorited),
                   ],
                 )),
               );
@@ -83,7 +91,6 @@ class _RestaurantDetailPageState extends State<RestaurantDetailPage> {
   }
 
   Padding _content(Restaurant restaurant) {
-    debugPrint(restaurant.menus?.drinks.length.toString());
     return Padding(
       padding: const EdgeInsets.all(17),
       child: Column(
@@ -104,92 +111,94 @@ class _RestaurantDetailPageState extends State<RestaurantDetailPage> {
                       fontSize: 18,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.place,
                         color: Colors.deepPurple,
                         size: 20,
                       ),
                       Text(
                         restaurant.city,
-                        style: TextStyle(fontSize: 14),
+                        style: const TextStyle(fontSize: 14),
                       ),
                     ],
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 15,
               ),
               Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.star,
                     color: Colors.yellow,
                   ),
                   Text(
                     restaurant.rating.toString(),
-                    style: TextStyle(fontSize: 13),
+                    style: const TextStyle(fontSize: 13),
                   ),
                 ],
               ),
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
-          Divider(
+          const Divider(
             color: Colors.deepPurple,
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
-          Text("Kategori", style: TextStyle(fontWeight: FontWeight.w600)),
-          SizedBox(
+          const Text("Kategori Makanan",
+              style: TextStyle(fontWeight: FontWeight.w600)),
+          const SizedBox(
             height: 10,
           ),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
               children: restaurant.categories.map((resto) {
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 8),
-                      child: Container(
-                        padding: EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: Colors.grey,
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        child: Text(
-                          resto.name,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                          ),
-                        ),
+                return Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    child: Text(
+                      resto.name,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
                       ),
-                    );
-                  }).toList(),
+                    ),
+                  ),
+                );
+              }).toList(),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
-          Text("Deskripsi", style: TextStyle(fontWeight: FontWeight.w600)),
-          SizedBox(
+          const Text("Deskripsi",
+              style: TextStyle(fontWeight: FontWeight.w600)),
+          const SizedBox(
             height: 17,
           ),
-          Text(restaurant.description, style: TextStyle(fontSize: 13)),
-          SizedBox(width: 10),
-          SizedBox(
+          Text(restaurant.description, style: const TextStyle(fontSize: 13)),
+          const SizedBox(width: 10),
+          const SizedBox(
             height: 10,
           ),
-          Text("Makanan", style: TextStyle(fontWeight: FontWeight.w600)),
-          SizedBox(
+          const Text("Makanan", style: TextStyle(fontWeight: FontWeight.w600)),
+          const SizedBox(
             height: 17,
           ),
           SingleChildScrollView(
@@ -197,7 +206,7 @@ class _RestaurantDetailPageState extends State<RestaurantDetailPage> {
             child: Row(
               children: restaurant.menus?.foods.map((food) {
                     return Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8),
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
                         child: Container(
                           width: 125,
                           child: Column(
@@ -209,12 +218,12 @@ class _RestaurantDetailPageState extends State<RestaurantDetailPage> {
                                   scale: 12,
                                   color: Colors.grey,
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 11,
                                 ),
                                 Text(
                                   food.name,
-                                  style: TextStyle(fontSize: 12),
+                                  style: const TextStyle(fontSize: 12),
                                 )
                               ]),
                         ));
@@ -222,11 +231,11 @@ class _RestaurantDetailPageState extends State<RestaurantDetailPage> {
                   [],
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
-          Text("Minuman", style: TextStyle(fontWeight: FontWeight.w600)),
-          SizedBox(
+          const Text("Minuman", style: TextStyle(fontWeight: FontWeight.w600)),
+          const SizedBox(
             height: 17,
           ),
           SingleChildScrollView(
@@ -234,7 +243,7 @@ class _RestaurantDetailPageState extends State<RestaurantDetailPage> {
             child: Row(
               children: restaurant.menus?.drinks.map((drink) {
                     return Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8),
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
                         child: Container(
                           width: 125,
                           child: Column(
@@ -246,12 +255,12 @@ class _RestaurantDetailPageState extends State<RestaurantDetailPage> {
                                   scale: 12,
                                   color: Colors.grey,
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 11,
                                 ),
                                 Text(
                                   drink.name,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 12,
                                   ),
                                 )
@@ -266,21 +275,57 @@ class _RestaurantDetailPageState extends State<RestaurantDetailPage> {
     );
   }
 
-  Padding _navButton(BuildContext context) {
+  Padding _navButton(BuildContext context, bool favorited) {
     return Padding(
       padding: const EdgeInsets.only(top: 30, left: 24, right: 24),
-      child: CircleAvatar(
-        backgroundColor: Colors.deepPurple,
-        radius: 25,
-        child: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.white,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          CircleAvatar(
+            backgroundColor: Colors.deepPurple,
+            radius: 25,
+            child: IconButton(
+              icon: const Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
           ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
+          CircleAvatar(
+            backgroundColor: Colors.deepPurple,
+            radius: 25,
+            child: favorited
+                ? IconButton(
+                    icon: const Icon(
+                      Icons.favorite,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      Provider.of<FavoriteProvider>(context, listen: false)
+                          .removedFavorite(widget.restaurant.id.toString());
+                      setState(() {
+                        favorited = false;
+                      });
+                    },
+                  )
+                : IconButton(
+                    icon: const Icon(
+                      Icons.favorite_border,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      Provider.of<FavoriteProvider>(context, listen: false)
+                          .addRestaurant(widget.restaurant);
+                      setState(() {
+                        favorited = true;
+                      });
+                    },
+                  ),
+          )
+        ],
       ),
     );
   }

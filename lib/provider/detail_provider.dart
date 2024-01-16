@@ -1,13 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:restaurant_app/data/api/api_service.dart';
 import 'package:restaurant_app/data/model/detail_restaurant.dart';
-
-enum ResultState { loading, noData, hasData, error }
+import 'package:restaurant_app/data/result_state.dart';
 
 class DetailProvider extends ChangeNotifier {
   final Api api;
   final String id;
-  DetailProvider({required this.api, this.id = ''}){
+  DetailProvider({required this.api, this.id = ''}) {
     fetchDetailRestaurant(id);
   }
 
@@ -32,7 +31,6 @@ class DetailProvider extends ChangeNotifier {
       _state = ResultState.hasData;
       notifyListeners();
       return _restaurant = restaurant;
-
     } catch (e) {
       _state = ResultState.error;
       notifyListeners();

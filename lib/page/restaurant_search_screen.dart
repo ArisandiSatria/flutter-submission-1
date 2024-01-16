@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_app/data/model/restaurant.dart';
 import 'package:restaurant_app/provider/search_provider.dart';
+import 'package:restaurant_app/data/result_state.dart';
 
 class RestaurantSearch extends StatefulWidget {
-
   const RestaurantSearch({super.key});
 
   @override
@@ -15,7 +15,6 @@ class _RestaurantSearchState extends State<RestaurantSearch> {
   final TextEditingController _searchController = TextEditingController();
 
   Future<void> _searchRestaurants(BuildContext context) async {
-    // String searchQuery = _searchController.text;
     if (_searchController.text.isNotEmpty) {
       Provider.of<SearchProvider>(context, listen: false)
           .fetchSearchRestaurant(_searchController.text);
@@ -31,46 +30,63 @@ class _RestaurantSearchState extends State<RestaurantSearch> {
           decoration: const InputDecoration(
             hintText: 'Cari Restoran...',
           ),
-          onSubmitted: (String s){
+          onSubmitted: (String s) {
             setState(() {
-              // _searchController.text = s;
               _searchRestaurants(context);
             });
           },
         ),
         actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.search,
-              size: 32,
-              color: Colors.deepPurple,
-            ),
-            onPressed: () {
-              // _searchRestaurants(context, _searchController.text);
-            },
-          ),
+          _searchController.text.isEmpty
+              ? IconButton(
+                  icon: const Icon(
+                    Icons.search,
+                    size: 32,
+                    color: Colors.deepPurple,
+                  ),
+                  onPressed: () {
+                    _searchRestaurants(context);
+                  },
+                )
+              : IconButton(
+                  icon: const Icon(
+                    Icons.close,
+                    size: 32,
+                    color: Colors.deepPurple,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _searchController.text = "";
+                    });
+                  },
+                )
         ],
       ),
       body: Consumer<SearchProvider>(
         builder: (context, searchProvider, _) {
           if (searchProvider.state == ResultState.loading) {
             return const Center(child: CircularProgressIndicator());
-          }
-          else if (searchProvider.state == ResultState.hasData) {
+          } else if (searchProvider.state == ResultState.hasData) {
             return _content(searchProvider.result.restaurants, context);
-          }
-          else if (searchProvider.state == ResultState.noData) {
+          } else if (searchProvider.state == ResultState.noData) {
             return Center(
               child: Material(
                 child: Text(searchProvider.message),
               ),
             );
+          } else if (searchProvider.state == ResultState.error) {
+            return Center(
+              child: Material(
+                child: Text(searchProvider.message),
+              ),
+            );
+          } else {
+            return const Center(
+              child: Material(
+                child: Text(''),
+              ),
+            );
           }
-          return const Center(
-            child: Material(
-              child: Text(''),
-            ),
-          );
         },
       ),
     );
@@ -81,7 +97,6 @@ class _RestaurantSearchState extends State<RestaurantSearch> {
       shrinkWrap: true,
       itemCount: restaurant.length,
       itemBuilder: (context, index) {
-        debugPrint(restaurant[index].name);
         return _buildRestaurantItem(restaurant[index], context);
       },
     );

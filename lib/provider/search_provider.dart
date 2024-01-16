@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant_app/data/api/api_service.dart';
 import 'package:restaurant_app/data/model/search.dart';
-
-enum ResultState { loading, noData, hasData, error }
+import 'package:restaurant_app/data/result_state.dart';
 
 class SearchProvider extends ChangeNotifier {
   final Api api;
   final String name;
 
-  SearchProvider({required this.api, this.name = ''}){
-    _restaurants = RestaurantSearchResult(restaurants: [], error: false, founded: 0);
+  SearchProvider({required this.api, this.name = ''}) {
+    _restaurants =
+        RestaurantSearchResult(restaurants: [], error: false, founded: 0);
     _state = ResultState.noData;
   }
 
@@ -41,7 +41,6 @@ class SearchProvider extends ChangeNotifier {
         notifyListeners();
       }
       notifyListeners();
-      _restaurants = response.restaurants;
     } catch (e) {
       _state = ResultState.error;
       notifyListeners();

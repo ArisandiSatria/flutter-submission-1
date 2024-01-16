@@ -3,8 +3,8 @@ import 'dart:convert';
 class Welcome {
   final bool error;
   final String message;
-  final Restaurant? restaurant; // kalo mau ambil data detail pake ini
-  final List<Restaurant> restaurants; // kalo mau ambil data list pake ini
+  final Restaurant? restaurant;
+  final List<Restaurant> restaurants;
 
   Welcome({
     required this.error,
@@ -60,8 +60,7 @@ class Restaurant {
         description: restaurant['description'],
         city: restaurant['city'],
         address: restaurant["address"] == null ? null : restaurant['address'],
-        pictureId:
-            "https://restaurant-api.dicoding.dev/images/medium/${restaurant['pictureId']}",
+        pictureId: restaurant['pictureId'],
         categories: restaurant["categories"] == null
             ? []
             : List<Category>.from(
@@ -75,6 +74,15 @@ class Restaurant {
             : List<CustomerReview>.from(restaurant["customerReviews"]!
                 .map((x) => CustomerReview.fromJson(x))),
       );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "name": name,
+        "description": description,
+        "pictureId": pictureId,
+        "city": city,
+        "rating": rating,
+      };
 }
 
 class Category {

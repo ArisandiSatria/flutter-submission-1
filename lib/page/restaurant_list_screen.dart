@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_app/data/model/restaurant.dart';
+import 'package:restaurant_app/page/restaurant_favorite_screen.dart';
+import 'package:restaurant_app/widget/restaurant_item.dart';
 import 'package:restaurant_app/provider/restaurant_provider.dart';
+import 'package:restaurant_app/data/result_state.dart';
 
 class RestaurantListPage extends StatefulWidget {
   const RestaurantListPage({Key? key}) : super(key: key);
@@ -11,6 +14,10 @@ class RestaurantListPage extends StatefulWidget {
 }
 
 class _RestaurantListPageState extends State<RestaurantListPage> {
+  bool isFavorite = false;
+
+  int _currentIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,41 +47,79 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
           ),
         ],
       ),
-      body: Consumer<RestaurantProvider>(
-        builder: (context, state, _) {
-          if (state.state == ResultState.loading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state.state == ResultState.hasData) {
-            var restaurant =
-                state.result.map((restaurant) => restaurant).toList();
-            return _content(restaurant, state);
-          } else if (state.state == ResultState.noData) {
-            return Center(
-              child: Material(
-                child: Text(state.message),
-              ),
-            );
-          } else if (state.state == ResultState.error) {
-            return Center(child: _buildErrorContent(state.message));
-          } else {
-            return Center(
-              child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 50),
-                  child: Column(
-                    children: [
-                      Image.asset(
-                        'assets/images/loupe.png',
-                        fit: BoxFit.cover,
-                        scale: 12,
-                        color: Colors.grey,
-                      ),
-                      Text("Not Data!")
-                    ],
-                  )),
-            );
-          }
+      body: _buildBody(),
+      bottomNavigationBar: BottomNavigationBar(
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
         },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite),
+            label: 'Favorite',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+          ),
+        ],
       ),
+    );
+  }
+
+  Widget _buildBody() {
+    switch (_currentIndex) {
+      case 0:
+        return _homeScreen();
+      case 1:
+        return const RestaurantFavoritePage();
+      // case 2:
+      //   return _buildSettingsScreen();
+      default:
+        return Container();
+    }
+  }
+
+  Widget _homeScreen() {
+    return Consumer<RestaurantProvider>(
+      builder: (context, state, _) {
+        if (state.state == ResultState.loading) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (state.state == ResultState.hasData) {
+          var restaurant =
+              state.result.map((restaurant) => restaurant).toList();
+          return _content(restaurant, state);
+        } else if (state.state == ResultState.noData) {
+          return Center(
+            child: Material(
+              child: Text(state.message),
+            ),
+          );
+        } else if (state.state == ResultState.error) {
+          return Center(child: _buildErrorContent(state.message));
+        } else {
+          return Center(
+            child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 50),
+                child: Column(
+                  children: [
+                    Image.asset(
+                      'assets/images/loupe.png',
+                      fit: BoxFit.cover,
+                      scale: 12,
+                      color: Colors.grey,
+                    ),
+                    const Text("Not Data!")
+                  ],
+                )),
+          );
+        }
+      },
     );
   }
 
@@ -94,7 +139,9 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
                   return _banner();
                 } else {
                   final restaurantItem = restaurant[index - 1];
-                  return _buildRestaurantItem(context, restaurantItem);
+                  return RestaurantItem(
+                    restaurant: restaurantItem,
+                  );
                 }
               },
             ),
@@ -131,82 +178,5 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
             ),
           ],
         ));
-  }
-
-  Widget _buildRestaurantItem(BuildContext context, Restaurant restaurant) {
-    return ClipRRect(
-      clipBehavior: Clip.hardEdge,
-      borderRadius: BorderRadius.circular(18),
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
-        child: InkWell(
-          onTap: () {
-            Navigator.pushNamed(context, "/restaurant-detail",
-                arguments: restaurant);
-          },
-          child: Container(
-            height: 100,
-            padding: const EdgeInsets.symmetric(horizontal: 17, vertical: 5),
-            child: Row(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Image.network(
-                    restaurant.pictureId,
-                    width: 100,
-                    errorBuilder: (ctx, error, _) =>
-                        const Center(child: Icon(Icons.error)),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        restaurant.name,
-                        style: const TextStyle(
-                            fontSize: 13, fontWeight: FontWeight.bold),
-                      ),
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.place,
-                            color: Colors.deepPurple,
-                            size: 20,
-                          ),
-                          Text(
-                            restaurant.city,
-                            style: const TextStyle(
-                                fontSize: 12, color: Colors.grey),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.star,
-                            color: Colors.yellow,
-                            size: 20,
-                          ),
-                          Text(
-                            restaurant.rating.toString(),
-                            style: const TextStyle(fontSize: 12),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
   }
 }

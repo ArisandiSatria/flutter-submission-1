@@ -14,28 +14,43 @@ class RestaurantFavoritePage extends StatefulWidget {
 class _RestaurantFavoritePageState extends State<RestaurantFavoritePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Consumer<FavoriteProvider>(
-      builder: (context, provider, child) {
-        if (provider.state == ResultState.hasData) {
-          return ListView.builder(
-            itemCount: provider.favorite.length,
-            itemBuilder: (context, index) {
-              return RestaurantItem(
-                restaurant: provider.favorite[index],
-              );
-            },
-          );
-        } else {
-          return Center(
-            child: Material(
-              child: Text(
-                provider.message,
-                style: const TextStyle(color: Colors.grey),
+    return Scaffold(
+      body: Consumer<FavoriteProvider>(
+        builder: (context, provider, child) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Padding(
+                padding: EdgeInsets.only(right: 17, left: 17, top: 20),
+                child: Text(
+                  "Daftar Restoran Favorit",
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                ),
               ),
-            ),
+              if (provider.state == ResultState.hasData)
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: provider.favorite.length,
+                    itemBuilder: (context, index) {
+                      return RestaurantItem(
+                        restaurant: provider.favorite[index],
+                      );
+                    },
+                  ),
+                ),
+              if (provider.state != ResultState.hasData)
+                Center(
+                  child: Material(
+                    child: Text(
+                      provider.message,
+                      style: const TextStyle(color: Colors.grey),
+                    ),
+                  ),
+                ),
+            ],
           );
-        }
-      },
-    ));
+        },
+      ),
+    );
   }
 }

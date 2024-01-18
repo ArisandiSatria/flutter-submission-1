@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:restaurant_app/data/api/api_service.dart';
@@ -11,7 +12,11 @@ import 'package:restaurant_app/page/splash_screen.dart';
 import 'package:restaurant_app/provider/favorite_provider.dart';
 import 'package:restaurant_app/provider/detail_provider.dart';
 import 'package:restaurant_app/provider/restaurant_provider.dart';
+import 'package:restaurant_app/provider/schedulling_provider.dart';
 import 'package:restaurant_app/provider/search_provider.dart';
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
 void main() {
   runApp(
@@ -33,6 +38,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => FavoriteProvider(databaseHelper: DatabaseHelper()),
         ),
+        ChangeNotifierProvider(
+          create: (context) => SchedulingProvider(),
+        )
       ],
       child: MaterialApp(
         title: 'Flutter Demo',

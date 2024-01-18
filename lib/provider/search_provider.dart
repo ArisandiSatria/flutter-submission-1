@@ -33,7 +33,7 @@ class SearchProvider extends ChangeNotifier {
       final response = await api.fetchRestaurantSearch(name);
       if (response.restaurants.isEmpty && response.founded == 0) {
         _state = ResultState.noData;
-        _message = 'Empty Data';
+        _message = 'No Restaurant';
         notifyListeners();
       } else {
         _state = ResultState.hasData;
@@ -44,7 +44,7 @@ class SearchProvider extends ChangeNotifier {
     } catch (e) {
       _state = ResultState.error;
       notifyListeners();
-      _message = 'Check Your Internet Connection !';
+      _message = 'Check Your Internet Connection!';
     }
   }
 }

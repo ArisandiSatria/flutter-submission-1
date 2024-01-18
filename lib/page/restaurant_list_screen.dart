@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_app/data/model/restaurant.dart';
 import 'package:restaurant_app/page/restaurant_favorite_screen.dart';
+import 'package:restaurant_app/page/setting_screen.dart';
 // import 'package:restaurant_app/page/setting_screen.dart';
 import 'package:restaurant_app/widget/restaurant_item.dart';
 import 'package:restaurant_app/provider/restaurant_provider.dart';
@@ -81,6 +82,8 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
         return _homeScreen();
       case 1:
         return const RestaurantFavoritePage();
+      case 2:
+        return const SettingPage();
       default:
         return Container();
     }
@@ -137,7 +140,13 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
               itemCount: restaurant.length + 1,
               itemBuilder: (context, index) {
                 if (index == 0) {
-                  return _banner();
+                  return const Padding(
+                    padding: EdgeInsets.only(right: 17, left: 17, top: 20),
+                    child: Text(
+                      "Daftar Restoran",
+                      style: TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                  );
                 } else {
                   final restaurantItem = restaurant[index - 1];
                   return RestaurantItem(
@@ -165,19 +174,5 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
         ],
       ),
     );
-  }
-
-  Padding _banner() {
-    return const Padding(
-        padding: EdgeInsets.only(right: 17, left: 17, top: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Daftar Restoran",
-              style: TextStyle(fontWeight: FontWeight.w600),
-            ),
-          ],
-        ));
   }
 }

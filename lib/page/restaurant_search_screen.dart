@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:restaurant_app/data/model/restaurant.dart';
 import 'package:restaurant_app/provider/search_provider.dart';
 import 'package:restaurant_app/data/result_state.dart';
+import 'package:restaurant_app/widget/restaurant_item.dart';
 
 class RestaurantSearch extends StatefulWidget {
   const RestaurantSearch({super.key});
@@ -97,85 +98,11 @@ class _RestaurantSearchState extends State<RestaurantSearch> {
       shrinkWrap: true,
       itemCount: restaurant.length,
       itemBuilder: (context, index) {
-        return _buildRestaurantItem(restaurant[index], context);
+        final restaurantItem = restaurant[index];
+        return RestaurantItem(
+          restaurant: restaurantItem,
+        );
       },
-    );
-  }
-
-  Widget _buildRestaurantItem(Restaurant restaurant, BuildContext context) {
-    return ClipRRect(
-      clipBehavior: Clip.hardEdge,
-      borderRadius: BorderRadius.circular(18),
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
-        child: InkWell(
-          onTap: () {
-            Navigator.pushNamed(context, "/restaurant-detail",
-                arguments: restaurant);
-          },
-          child: Container(
-            height: 100,
-            padding: const EdgeInsets.symmetric(horizontal: 17, vertical: 5),
-            child: Row(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Image.network(
-                    restaurant.pictureId,
-                    width: 100,
-                    errorBuilder: (ctx, error, _) =>
-                        const Center(child: Icon(Icons.error)),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        restaurant.name,
-                        style: const TextStyle(
-                            fontSize: 13, fontWeight: FontWeight.bold),
-                      ),
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.place,
-                            color: Colors.deepPurple,
-                            size: 20,
-                          ),
-                          Text(
-                            restaurant.city,
-                            style: const TextStyle(
-                                fontSize: 12, color: Colors.grey),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.star,
-                            color: Colors.yellow,
-                            size: 20,
-                          ),
-                          Text(
-                            restaurant.rating.toString(),
-                            style: const TextStyle(fontSize: 12),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
     );
   }
 }

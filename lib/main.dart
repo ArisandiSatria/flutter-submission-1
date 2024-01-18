@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => SearchProvider(api: Api())),
         ChangeNotifierProvider(
           create: (_) => FavoriteProvider(databaseHelper: DatabaseHelper()),
-        )
+        ),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
@@ -49,10 +49,9 @@ class MyApp extends StatelessWidget {
             if (arguments is Map<String, dynamic>) {
               return RestaurantDetailPage(
                 restaurant: arguments['restaurant'] as Restaurant,
-                favorited: arguments['favorited'] as bool,
               );
             } else {
-              return Scaffold(
+              return const Scaffold(
                 body: Center(
                   child:
                       Text('Invalid arguments type for RestaurantDetailPage'),

@@ -21,11 +21,13 @@ class FavoriteProvider extends ChangeNotifier {
 
   void _getRestaurant() async {
     _favorite = await databaseHelper.getFavorite();
-    if (_favorite.length > 0) {
+    if (_favorite.isNotEmpty) {
       _state = ResultState.hasData;
+      notifyListeners();
     } else {
       _state = ResultState.noData;
-      _message = 'Empty Data';
+      notifyListeners();
+      _message = 'No Favorite Restaurant';
     }
     notifyListeners();
   }
@@ -39,6 +41,7 @@ class FavoriteProvider extends ChangeNotifier {
       _message = 'Error: $e';
       notifyListeners();
     }
+    notifyListeners();
   }
 
   Future<bool> isFavorite(String id) async {

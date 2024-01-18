@@ -3,6 +3,7 @@ import 'package:restaurant_app/data/model/detail_restaurant.dart';
 import 'package:restaurant_app/data/model/restaurant.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:restaurant_app/data/model/restaurant_result.dart';
 import 'package:restaurant_app/data/model/search.dart';
 
 class Api {
@@ -15,6 +16,16 @@ class Api {
       return Welcome.fromJson(json.decode(response.body));
     } else {
       throw Exception('Failed to load restaurant list');
+    }
+  }
+
+  Future<RestaurantResult> fetchRestaurants() async {
+    final response = await http.get(Uri.parse("$_url/list"));
+
+    if (response.statusCode == 200) {
+      return RestaurantResult.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Failed to load restaurants');
     }
   }
 

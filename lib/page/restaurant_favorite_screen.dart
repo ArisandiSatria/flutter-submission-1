@@ -28,7 +28,10 @@ class _RestaurantFavoritePageState extends State<RestaurantFavoritePage> {
         } else {
           return Center(
             child: Material(
-              child: Text(provider.message),
+              child: Text(
+                provider.message,
+                style: const TextStyle(color: Colors.grey),
+              ),
             ),
           );
         }

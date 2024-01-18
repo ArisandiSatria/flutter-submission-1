@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_app/data/model/restaurant.dart';
 import 'package:restaurant_app/page/restaurant_favorite_screen.dart';
+// import 'package:restaurant_app/page/setting_screen.dart';
 import 'package:restaurant_app/widget/restaurant_item.dart';
 import 'package:restaurant_app/provider/restaurant_provider.dart';
 import 'package:restaurant_app/data/result_state.dart';
@@ -49,12 +50,7 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
       ),
       body: _buildBody(),
       bottomNavigationBar: BottomNavigationBar(
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        items: const [
+        items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
@@ -68,6 +64,13 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
             label: 'Settings',
           ),
         ],
+        currentIndex: _currentIndex,
+        selectedItemColor: Colors.deepPurple,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
       ),
     );
   }
@@ -78,8 +81,6 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
         return _homeScreen();
       case 1:
         return const RestaurantFavoritePage();
-      // case 2:
-      //   return _buildSettingsScreen();
       default:
         return Container();
     }

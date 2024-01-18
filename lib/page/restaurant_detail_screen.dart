@@ -8,12 +8,10 @@ import 'package:restaurant_app/provider/favorite_provider.dart';
 
 class RestaurantDetailPage extends StatefulWidget {
   final Restaurant restaurant;
-  final bool favorited;
 
-  RestaurantDetailPage({
+  const RestaurantDetailPage({
     Key? key,
     required this.restaurant,
-    this.favorited = false,
   }) : super(key: key);
 
   @override
@@ -32,7 +30,6 @@ class _RestaurantDetailPageState extends State<RestaurantDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    bool favorited = widget.favorited;
     String? imageBaseUrl = 'https://restaurant-api.dicoding.dev/images/medium/';
     return ChangeNotifierProvider(
       create: (_) => DetailProvider(
@@ -61,7 +58,7 @@ class _RestaurantDetailPageState extends State<RestaurantDetailPage> {
                         _content(state.detailResult.restaurant),
                       ],
                     ),
-                    _navButton(context, favorited),
+                    _navButton(context),
                   ],
                 )),
               );
@@ -155,7 +152,7 @@ class _RestaurantDetailPageState extends State<RestaurantDetailPage> {
           const SizedBox(
             height: 10,
           ),
-          const Text("Kategori Makanan",
+          const Text("Jenis Makanan",
               style: TextStyle(fontWeight: FontWeight.w600)),
           const SizedBox(
             height: 10,
@@ -207,7 +204,7 @@ class _RestaurantDetailPageState extends State<RestaurantDetailPage> {
               children: restaurant.menus?.foods.map((food) {
                     return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8),
-                        child: Container(
+                        child: SizedBox(
                           width: 125,
                           child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -244,7 +241,7 @@ class _RestaurantDetailPageState extends State<RestaurantDetailPage> {
               children: restaurant.menus?.drinks.map((drink) {
                     return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8),
-                        child: Container(
+                        child: SizedBox(
                           width: 125,
                           child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -275,58 +272,60 @@ class _RestaurantDetailPageState extends State<RestaurantDetailPage> {
     );
   }
 
-  Padding _navButton(BuildContext context, bool favorited) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 30, left: 24, right: 24),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          CircleAvatar(
-            backgroundColor: Colors.deepPurple,
-            radius: 25,
-            child: IconButton(
-              icon: const Icon(
-                Icons.arrow_back,
-                color: Colors.white,
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-          ),
-          CircleAvatar(
-            backgroundColor: Colors.deepPurple,
-            radius: 25,
-            child: favorited
-                ? IconButton(
-                    icon: const Icon(
-                      Icons.favorite,
-                      color: Colors.white,
+  Widget _navButton(BuildContext context) {
+    return Consumer<FavoriteProvider>(
+      builder: (context, provider, child) {
+        return FutureBuilder(
+            future: provider.isFavorite(widget.restaurant.id),
+            builder: ((context, snapshot) {
+              var isFavorited = snapshot.data ?? false;
+              return Padding(
+                padding: const EdgeInsets.only(top: 30, left: 24, right: 24),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    CircleAvatar(
+                      backgroundColor: Colors.deepPurple,
+                      radius: 25,
+                      child: IconButton(
+                        icon: const Icon(
+                          Icons.arrow_back,
+                          color: Colors.white,
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
                     ),
-                    onPressed: () {
-                      Provider.of<FavoriteProvider>(context, listen: false)
-                          .removedFavorite(widget.restaurant.id.toString());
-                      setState(() {
-                        favorited = false;
-                      });
-                    },
-                  )
-                : IconButton(
-                    icon: const Icon(
-                      Icons.favorite_border,
-                      color: Colors.white,
-                    ),
-                    onPressed: () {
-                      Provider.of<FavoriteProvider>(context, listen: false)
-                          .addRestaurant(widget.restaurant);
-                      setState(() {
-                        favorited = true;
-                      });
-                    },
-                  ),
-          )
-        ],
-      ),
+                    CircleAvatar(
+                      backgroundColor: Colors.deepPurple,
+                      radius: 25,
+                      child: isFavorited
+                          ? IconButton(
+                              icon: const Icon(
+                                Icons.favorite,
+                                color: Colors.white,
+                              ),
+                              onPressed: () {
+                                provider.removedFavorite(
+                                    widget.restaurant.id.toString());
+                              },
+                            )
+                          : IconButton(
+                              icon: const Icon(
+                                Icons.favorite_border,
+                                color: Colors.white,
+                              ),
+                              onPressed: () {
+                                provider.addRestaurant(widget.restaurant);
+                              },
+                            ),
+                    )
+                  ],
+                ),
+              );
+            }));
+      },
     );
   }
 }

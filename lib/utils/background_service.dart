@@ -1,7 +1,7 @@
 import 'dart:ui';
 import 'dart:isolate';
-import 'package:flutter/material.dart';
 import 'package:restaurant_app/main.dart';
+import 'package:flutter/material.dart';
 import 'package:restaurant_app/data/api/api_service.dart';
 import 'package:restaurant_app/utils/notification_helper.dart';
 

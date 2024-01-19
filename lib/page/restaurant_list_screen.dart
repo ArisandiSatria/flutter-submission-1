@@ -118,7 +118,7 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
                       scale: 12,
                       color: Colors.grey,
                     ),
-                    const Text("Not Data!")
+                    const Text("No Data")
                   ],
                 )),
           );

@@ -38,7 +38,7 @@ class _RestaurantFavoritePageState extends State<RestaurantFavoritePage> {
                     },
                   ),
                 ),
-              if (provider.state != ResultState.hasData)
+              if (provider.state == ResultState.noData)
                 Center(
                   child: Material(
                     child: Text(

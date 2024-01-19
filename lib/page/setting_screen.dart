@@ -21,7 +21,7 @@ class SettingPage extends StatelessWidget {
             ),
             Material(
               child: ListTile(
-                title: const Text('Scheduling Restaurant',
+                title: const Text('Rekomendasi Restorant',
                     style:
                         TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
                 trailing: Consumer<SchedulingProvider>(

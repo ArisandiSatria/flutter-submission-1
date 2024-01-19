@@ -72,14 +72,17 @@ class _RestaurantSearchState extends State<RestaurantSearch> {
           } else if (searchProvider.state == ResultState.noData) {
             return Center(
               child: Material(
-                child: Text(searchProvider.message),
+                child: Text(
+                  searchProvider.message,
+                  style: const TextStyle(color: Colors.grey),
+                ),
               ),
             );
           } else if (searchProvider.state == ResultState.error) {
             return Center(
               child: Material(
-                child: Text(searchProvider.message),
-              ),
+                  child: Text(searchProvider.message,
+                      style: const TextStyle(color: Colors.grey))),
             );
           } else {
             return const Center(

@@ -21,9 +21,9 @@ class DetailRestaurant {
 
   factory DetailRestaurant.fromJson(Map<String, dynamic> json) =>
       DetailRestaurant(
-        error: json["error"],
-        message: json["message"],
-        restaurant: Restaurant.fromJson(json["restaurant"]),
+        error: json['error'] ?? false,
+        message: json['message'] ?? '',
+        restaurant: Restaurant.fromJson(json['restaurant'] ?? {}),
       );
 
   Map<String, dynamic> toJson() => {

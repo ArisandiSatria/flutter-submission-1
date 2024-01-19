@@ -40,7 +40,6 @@ class _RestaurantItemState extends State<RestaurantItem> {
                           "/restaurant-detail",
                           arguments: {
                             'restaurant': widget.restaurant,
-                            'favorited': isFavorited,
                           },
                         );
                       },

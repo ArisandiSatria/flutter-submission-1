@@ -7,6 +7,7 @@ import 'package:restaurant_app/data/result_state.dart';
 import 'package:restaurant_app/provider/favorite_provider.dart';
 
 class RestaurantDetailPage extends StatefulWidget {
+  static const routeName = '/restaurant-detail';
   final Restaurant restaurant;
 
   const RestaurantDetailPage({

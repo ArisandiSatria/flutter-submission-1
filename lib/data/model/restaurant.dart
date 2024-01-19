@@ -39,7 +39,6 @@ class Restaurant {
   final List<Category> categories;
   final Menus? menus;
   final double rating;
-  final List<CustomerReview> customerReviews;
 
   Restaurant({
     required this.id,
@@ -51,7 +50,6 @@ class Restaurant {
     required this.categories,
     required this.menus,
     required this.rating,
-    required this.customerReviews,
   });
 
   factory Restaurant.fromJson(Map<String, dynamic> restaurant) => Restaurant(
@@ -69,10 +67,6 @@ class Restaurant {
             ? null
             : Menus.fromJson(restaurant["menus"]),
         rating: restaurant['rating'].toDouble(),
-        customerReviews: restaurant["customerReviews"] == null
-            ? []
-            : List<CustomerReview>.from(restaurant["customerReviews"]!
-                .map((x) => CustomerReview.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {

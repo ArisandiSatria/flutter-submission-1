@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:restaurant_app/page/restaurant_list_screen.dart';
 
 class SplashScreen extends StatefulWidget {
+  static const routeName = '/';
   const SplashScreen({Key? key}) : super(key: key);
 
   @override
@@ -98,7 +99,6 @@ class _SplashScreenState extends State<SplashScreen>
                   color: Colors.white,
                   fontSize: 32,
                 ),
-                
               ),
             ),
           ],

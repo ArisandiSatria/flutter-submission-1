@@ -11,13 +11,13 @@ class SharedPrefProvider extends ChangeNotifier {
   bool _isDailyActive = false;
   bool get isDailyActive => _isDailyActive;
 
-  Future<void> _getDailyActive() async {
+  void _getDailyActive() async {
     _isDailyActive = await preferencesHelper.isDailyRestaurantActive;
     notifyListeners();
   }
 
-  Future<void> enableDailyActive(bool value) async {
+  void enableDailyActive(bool value) async {
     preferencesHelper.setDailyRestaurant(value);
-    await _getDailyActive();
+    _getDailyActive();
   }
 }

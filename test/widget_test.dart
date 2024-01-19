@@ -1,30 +1,61 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:http/testing.dart';
+import 'package:provider/provider.dart';
+import 'package:restaurant_app/data/api/api_service.dart';
+import 'package:restaurant_app/data/model/restaurant_result.dart';
+import 'package:http/http.dart' as http;
+import 'package:mockito/annotations.dart';
+import 'package:restaurant_app/data/preferences/preferences_helper.dart';
+import 'package:restaurant_app/page/setting_screen.dart';
+import 'package:restaurant_app/provider/preferences_provider.dart';
+import 'package:restaurant_app/provider/schedulling_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:restaurant_app/main.dart';
-
+@GenerateMocks([http.Client])
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  // group('Testing API Restfo', () {
+  //   test('should return restaurant correctly', () async {
+  //     final client = MockClient((request) async {
+  //       final response = {
+  //         "error": false,
+  //         "message": "success",
+  //         "count": 20,
+  //         "restaurants": []
+  //       };
+  //       return http.Response(json.encode(response), 200);
+  //     });
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+  //     final apiService = Api(httpClient: client);
+  //     final result = await apiService.fetchRestaurants();
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+  //     expect(result, isA<RestaurantResult>());
+  //   });
+  // });
+  group("Testing Widget", () {
+    testWidgets('SettingPage should have a Scaffold',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: MultiProvider(
+            providers: [
+              ChangeNotifierProvider(
+                create: (_) => SharedPrefProvider(
+                  preferencesHelper: PreferencesHelper(
+                    sharedPreference: SharedPreferences.getInstance(),
+                  ),
+                ),
+              ),
+              ChangeNotifierProvider(create: (context) => SchedulingProvider()),
+            ],
+            child: const SettingPage(),
+          ),
+        ),
+      );
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+      expect(find.byType(Scaffold), findsOneWidget);
+      expect(find.byType(Text), findsNWidgets(2));
+    });
   });
 }

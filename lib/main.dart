@@ -73,9 +73,9 @@ class MyApp extends StatelessWidget {
         initialRoute: "/",
         navigatorKey: navigatorKey,
         routes: {
-          '/': (context) => const SplashScreen(),
-          '/restaurant-list': (context) => const RestaurantListPage(),
-          '/restaurant-detail': (context) {
+          SplashScreen.routeName: (context) => const SplashScreen(),
+          RestaurantListPage.routeName: (context) => const RestaurantListPage(),
+          RestaurantDetailPage.routeName: (context) {
             final arguments = ModalRoute.of(context)?.settings.arguments;
 
             if (arguments is Map<String, dynamic>) {
@@ -91,7 +91,7 @@ class MyApp extends StatelessWidget {
               );
             }
           },
-          '/restaurant-search': (context) => const RestaurantSearch()
+          RestaurantSearch.routeName: (context) => const RestaurantSearch()
         },
         debugShowCheckedModeBanner: false,
       ),

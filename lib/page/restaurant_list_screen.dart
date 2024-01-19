@@ -3,12 +3,12 @@ import 'package:provider/provider.dart';
 import 'package:restaurant_app/data/model/restaurant.dart';
 import 'package:restaurant_app/page/restaurant_favorite_screen.dart';
 import 'package:restaurant_app/page/setting_screen.dart';
-// import 'package:restaurant_app/page/setting_screen.dart';
 import 'package:restaurant_app/widget/restaurant_item.dart';
 import 'package:restaurant_app/provider/restaurant_provider.dart';
 import 'package:restaurant_app/data/result_state.dart';
 
 class RestaurantListPage extends StatefulWidget {
+  static const routeName = '/restaurant-list';
   const RestaurantListPage({Key? key}) : super(key: key);
 
   @override

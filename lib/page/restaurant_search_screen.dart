@@ -6,6 +6,7 @@ import 'package:restaurant_app/data/result_state.dart';
 import 'package:restaurant_app/widget/restaurant_item.dart';
 
 class RestaurantSearch extends StatefulWidget {
+  static const routeName = '/restaurant-search';
   const RestaurantSearch({super.key});
 
   @override

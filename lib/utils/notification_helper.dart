@@ -71,7 +71,7 @@ class NotificationHelper {
     var data = restaurant.restaurants;
     var index = random.nextInt(data.length);
 
-    var titleRestaurant = restaurant.restaurants[0].name;
+    var titleRestaurant = restaurant.restaurants[index].name;
 
     await flutterLocalNotificationsPlugin.show(
         0, titleNotification, titleRestaurant, platformChannelSpecifics,

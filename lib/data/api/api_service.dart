@@ -13,7 +13,7 @@ class Api {
   Api({http.Client? httpClient}) : client = httpClient ?? http.Client();
 
   Future<Welcome> fetchRestaurantList() async {
-    final response = await http.get(Uri.parse("$_url/list"));
+    final response = await client.get(Uri.parse("$_url/list"));
 
     if (response.statusCode == 200) {
       return Welcome.fromJson(json.decode(response.body));
@@ -23,7 +23,7 @@ class Api {
   }
 
   Future<RestaurantResult> fetchRestaurants() async {
-    final response = await http.get(Uri.parse("$_url/list"));
+    final response = await client.get(Uri.parse("$_url/list"));
 
     if (response.statusCode == 200) {
       return RestaurantResult.fromJson(json.decode(response.body));
@@ -33,7 +33,7 @@ class Api {
   }
 
   Future<DetailRestaurant> fetchRestaurantDetail(String id) async {
-    final response = await http.get(Uri.parse("$_url/detail/$id"));
+    final response = await client.get(Uri.parse("$_url/detail/$id"));
 
     if (response.statusCode == 200) {
       return DetailRestaurant.fromJson(json.decode(response.body));
@@ -44,7 +44,7 @@ class Api {
 
   Future<RestaurantSearchResult> fetchRestaurantSearch(
       String searchQuery) async {
-    final response = await http.get(Uri.parse("$_url/search?q=$searchQuery"));
+    final response = await client.get(Uri.parse("$_url/search?q=$searchQuery"));
 
     if (response.statusCode == 200) {
       return RestaurantSearchResult.fromJson(json.decode(response.body));
